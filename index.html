@@ -426,15 +426,95 @@ a:hover { text-decoration: underline; }
 
 /* Mobile */
 @media (max-width: 700px) {
-  .app { padding: 12px; }
-  .topbar { gap: 8px; }
-  .brand h1 { font-size: 18px; }
-  .grid { grid-template-columns: 1fr; }
-  .cal-cell { min-height: 80px; padding: 4px; }
+  .app { padding: 12px 12px 96px; }
+
+  /* --- Top bar: brand on its own row, actions below --- */
+  .topbar {
+    flex-wrap: wrap; gap: 10px 8px;
+    padding: 4px 0 14px; margin-bottom: 12px;
+  }
+  .brand { flex: 1 1 100%; }
+  .brand h1 { font-size: 19px; }
+  .brand .sub { font-size: 11.5px; }
+  #add-event-btn { order: 2; margin-left: auto; }
+  #profile-btn { order: 3; }
+
+  /* --- View toggle spans full width, evenly split --- */
+  .view-toggle { display: flex; width: 100%; }
+  .view-toggle button { flex: 1; justify-content: center; padding: 9px 10px; }
+
+  /* --- Filters: each group is a single horizontal-scroll strip --- */
+  .filters {
+    flex-direction: column; align-items: stretch; gap: 8px;
+    flex-wrap: nowrap;
+    padding: 8px 0;
+    /* let strips bleed to screen edges so chips can scroll fully */
+    margin-left: -12px; margin-right: -12px; padding-left: 12px; padding-right: 12px;
+  }
+  .filter-group {
+    flex-wrap: nowrap; overflow-x: auto; gap: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* allow chips to scroll past the right edge */
+    margin-right: -12px; padding-right: 12px;
+  }
+  .filter-group::-webkit-scrollbar { display: none; }
+  .filter-group > * { flex: 0 0 auto; }
+  .filter-group .label {
+    position: sticky; left: 0; z-index: 1;
+    background: var(--bg);
+    align-self: center;
+    padding: 0 6px 0 0;
+  }
+  /* Bigger, thumb-friendly chips */
+  .chip { font-size: 13px; padding: 8px 13px; }
+
+  /* Search + toggles row: search full width, toggles wrap beneath */
+  .filters .filter-group:last-child {
+    flex-wrap: wrap; overflow: visible; margin-right: 0; padding-right: 0;
+  }
+  .filter-search {
+    flex: 1 1 100%; max-width: none; min-width: 0;
+    font-size: 16px; /* prevents iOS zoom-on-focus */
+    padding: 10px 12px;
+  }
+  .reset-link { margin-left: auto; padding: 6px 8px; }
+
+  .count-badge { padding: 4px 0 0; }
+
+  /* --- Cards --- */
+  .grid { grid-template-columns: 1fr; gap: 12px; }
+  .card .actions { flex-wrap: wrap; }
+  .btn-action { padding: 7px 11px; font-size: 12.5px; }
+  .interest-stack { margin-left: auto; }
+
+  /* --- Calendar --- */
+  .cal-cell { min-height: 78px; padding: 4px; }
   .cal-event { font-size: 9.5px; padding: 1px 4px; }
   .cal-grid .dow { padding: 6px 2px; font-size: 10px; }
-  .filter-search { max-width: 100%; }
-  .cal-header h2 { font-size: 16px; }
+  .cal-header { flex-wrap: wrap; gap: 8px; }
+  .cal-header h2 { font-size: 16px; flex: 1; }
+  .cal-header .month-counts { flex: 1 1 100%; margin-left: 0; order: 3; }
+
+  /* --- Modals become bottom sheets --- */
+  .modal-backdrop { align-items: flex-end; padding: 0; }
+  .modal {
+    max-width: 100%; max-height: 92vh;
+    border-radius: 18px 18px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .detail-body { padding: 16px 16px 22px; }
+  .modal-body { padding: 14px 16px 20px; }
+  .emoji-grid { grid-template-columns: repeat(6, 1fr); }
+  .detail-body .action-row { gap: 8px; }
+  .detail-body .action-row .btn-primary { margin-left: 0; flex: 1 1 100%; justify-content: center; }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .brand h1 { font-size: 17px; }
+  .view-toggle button { padding: 9px 6px; font-size: 12.5px; }
+  .cal-event { font-size: 9px; }
 }
 </style>
 </head>
