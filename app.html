@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trip Plans · Summer/Fall 2026</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #fafaf7;
+  --bg-card: #ffffff;
+  --bg-soft: #f3f0e7;
+  --border: #e5e3dc;
+  --text: #1f1f1f;
+  --text-soft: #5a5a55;
+  --text-faint: #8a8a82;
+  --accent: #2b53a3;
+  --accent-soft: #e8f0ff;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.06);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.10);
+  --r-bay: #2b53a3;
+  --r-bay-bg: #e8f0ff;
+  --r-ams: #c4391f;
+  --r-ams-bg: #ffe6e0;
+  --r-mp:  #2e7a4a;
+  --r-mp-bg:  #e6f4ea;
+  --cat-festive: #db2777;
+  --cat-festive-bg: #fce8f0;
+  --cat-outdoor: #16803d;
+  --cat-outdoor-bg: #e6f4ea;
+  --cat-arts: #6d28d9;
+  --cat-arts-bg: #efe6ff;
+  --cat-kid: #c2780a;
+  --cat-kid-bg: #fff3d6;
+  --cat-novel: #1d4ed8;
+  --cat-novel-bg: #e6f0ff;
+  --cat-food: #c2410c;
+  --cat-food-bg: #ffe9d6;
+  --cat-getaway: #0d6b66;
+  --cat-getaway-bg: #d8f0ee;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ============ Layout ============ */
+.app { max-width: 1320px; margin: 0 auto; padding: 16px 18px 80px; }
+
+/* ============ Top bar ============ */
+.topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 6px 0 18px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.brand { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.brand h1 {
+  font-size: 22px; margin: 0; letter-spacing: -0.5px;
+  display: flex; gap: 8px; align-items: center;
+}
+.brand h1 .accent { font-size: 18px; }
+.brand .sub { font-size: 12px; color: var(--text-soft); }
+.profile-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px 6px 6px;
+  border-radius: 999px; background: var(--bg-card);
+  border: 1px solid var(--border);
+  cursor: pointer; font-size: 13px;
+  transition: background 0.12s, box-shadow 0.12s;
+}
+.profile-chip:hover { background: var(--bg-soft); box-shadow: var(--shadow-sm); }
+.profile-chip .avatar {
+  width: 28px; height: 28px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  background: var(--bg-soft);
+}
+.profile-chip .name { font-weight: 500; max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.profile-chip .stats { color: var(--text-faint); font-size: 11px; }
+
+/* ============ View toggle ============ */
+.view-toggle {
+  display: inline-flex; background: var(--bg-soft); padding: 3px; border-radius: 10px;
+  margin-bottom: 12px;
+}
+.view-toggle button {
+  background: transparent; border: none; padding: 7px 16px;
+  font-size: 13px; font-weight: 500; color: var(--text-soft);
+  border-radius: 8px; cursor: pointer; transition: background 0.12s, color 0.12s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.view-toggle button.active {
+  background: var(--bg-card); color: var(--text); box-shadow: var(--shadow-sm);
+}
+
+/* ============ Filters ============ */
+.filters {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  padding: 10px 0;
+  position: sticky; top: 0; z-index: 30; background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.filter-group { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.filter-group .label {
+  font-size: 11px; color: var(--text-faint); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.5px; padding-right: 4px;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12.5px; padding: 5px 11px; border-radius: 999px;
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--text-soft);
+  cursor: pointer; user-select: none; transition: all 0.12s; font-weight: 500;
+}
+.chip:hover { background: var(--bg-soft); }
+.chip.active { background: var(--text); color: white; border-color: var(--text); }
+.chip.active.bay { background: var(--r-bay); border-color: var(--r-bay); }
+.chip.active.ams { background: var(--r-ams); border-color: var(--r-ams); }
+.chip.active.mp  { background: var(--r-mp);  border-color: var(--r-mp); }
+.chip.active.cat-festive { background: var(--cat-festive); border-color: var(--cat-festive); }
+.chip.active.cat-outdoor { background: var(--cat-outdoor); border-color: var(--cat-outdoor); }
+.chip.active.cat-arts    { background: var(--cat-arts);    border-color: var(--cat-arts); }
+.chip.active.cat-kid     { background: var(--cat-kid);     border-color: var(--cat-kid); }
+.chip.active.cat-novel   { background: var(--cat-novel);   border-color: var(--cat-novel); }
+.chip.active.cat-food    { background: var(--cat-food);    border-color: var(--cat-food); }
+.chip.active.cat-getaway { background: var(--cat-getaway); border-color: var(--cat-getaway); }
+
+.filter-search {
+  flex: 1; min-width: 160px; max-width: 280px;
+  padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px;
+  background: var(--bg-card); color: var(--text);
+}
+.filter-search:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.count-badge { font-size: 12px; color: var(--text-soft); padding-left: 6px; }
+.reset-link {
+  font-size: 12px; color: var(--accent); background: transparent; border: 0;
+  cursor: pointer; padding: 4px 6px; margin-left: auto;
+}
+.reset-link:hover { text-decoration: underline; }
+
+/* ============ Grid view ============ */
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px;
+  margin-top: 10px;
+}
+.card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: box-shadow 0.15s, transform 0.15s;
+  position: relative;
+}
+.card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.card.done { opacity: 0.65; }
+.card .thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--bg-soft);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.card .thumb svg { display: block; width: 100%; height: 100%; }
+.card .thumb .region-badge {
+  position: absolute; top: 8px; left: 8px;
+  font-size: 10.5px; padding: 3px 8px; border-radius: 999px;
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(6px);
+  font-weight: 600; letter-spacing: 0.2px;
+}
+.card .thumb .date-overlay {
+  position: absolute; bottom: 8px; left: 8px;
+  font-size: 11px; padding: 3px 8px; border-radius: 6px;
+  background: rgba(0,0,0,0.72); color: white;
+  font-weight: 600; backdrop-filter: blur(6px);
+}
+.card .thumb .done-mark {
+  position: absolute; top: 8px; right: 8px;
+  width: 26px; height: 26px; border-radius: 999px;
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #22c55e;
+  display: none;
+}
+.card.done .done-mark { display: flex; }
+.card .body {
+  padding: 12px 14px 14px;
+  display: flex; flex-direction: column; gap: 6px; flex: 1;
+}
+.card h3 {
+  margin: 0; font-size: 15px; line-height: 1.3; font-weight: 600;
+}
+.card .dates { font-size: 12px; color: var(--text-soft); font-weight: 500; }
+.card .loc { font-size: 12px; color: var(--text-faint); }
+.card .desc { font-size: 13px; color: var(--text-soft); margin: 2px 0; line-height: 1.4; }
+.card .tag-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.tag {
+  font-size: 10.5px; padding: 2px 7px; border-radius: 999px; font-weight: 500;
+}
+.tag.cat-festive { background: var(--cat-festive-bg); color: var(--cat-festive); }
+.tag.cat-outdoor { background: var(--cat-outdoor-bg); color: var(--cat-outdoor); }
+.tag.cat-arts    { background: var(--cat-arts-bg);    color: var(--cat-arts); }
+.tag.cat-kid     { background: var(--cat-kid-bg);     color: var(--cat-kid); }
+.tag.cat-novel   { background: var(--cat-novel-bg);   color: var(--cat-novel); }
+.tag.cat-food    { background: var(--cat-food-bg);    color: var(--cat-food); }
+.tag.cat-getaway { background: var(--cat-getaway-bg); color: var(--cat-getaway); }
+.tag.aud { background: var(--bg-soft); color: var(--text-soft); }
+.tag.cost { background: var(--bg-soft); color: var(--text-soft); font-family: ui-monospace, monospace; }
+
+.card .actions {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-top: 1px solid var(--border);
+  background: rgba(0,0,0,0.01);
+}
+.btn-action {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 9px; font-size: 12px; font-weight: 500;
+  background: transparent; border: 1px solid var(--border); border-radius: 7px;
+  cursor: pointer; color: var(--text-soft); transition: all 0.12s;
+}
+.btn-action:hover { background: var(--bg-soft); color: var(--text); }
+.btn-action.active { background: var(--accent); color: white; border-color: var(--accent); }
+.btn-action.done-btn.active { background: #22c55e; border-color: #22c55e; }
+.btn-action .check { font-size: 13px; }
+
+.interest-stack { display: flex; align-items: center; gap: 0; margin-left: auto; }
+.interest-stack .avatar-mini {
+  width: 22px; height: 22px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; background: var(--bg-soft);
+  border: 2px solid var(--bg-card);
+  margin-left: -6px;
+}
+.interest-stack .avatar-mini:first-child { margin-left: 0; }
+.interest-stack .more {
+  font-size: 11px; color: var(--text-faint); margin-left: 4px; font-weight: 600;
+}
+.card .open-link {
+  font-size: 12px; color: var(--accent); margin-left: auto; font-weight: 500;
+}
+
+/* ============ Calendar view ============ */
+.cal-header {
+  display: flex; align-items: center; gap: 12px; padding: 6px 0 14px;
+}
+.cal-header .nav-btn {
+  width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--bg-card); cursor: pointer; font-size: 16px; color: var(--text-soft);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s;
+}
+.cal-header .nav-btn:hover { background: var(--bg-soft); }
+.cal-header .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.cal-header h2 { margin: 0; font-size: 19px; font-weight: 600; letter-spacing: -0.3px; }
+.cal-header .month-counts {
+  margin-left: auto; font-size: 12px; color: var(--text-soft);
+  display: flex; gap: 10px;
+}
+
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px;
+  background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+.cal-grid .dow {
+  background: var(--bg-card); padding: 8px 8px;
+  font-size: 11px; color: var(--text-faint); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  text-align: center;
+}
+.cal-cell {
+  background: var(--bg-card);
+  padding: 6px 6px 8px;
+  min-height: 110px;
+  display: flex; flex-direction: column; gap: 3px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.cal-cell:hover { background: var(--bg-soft); }
+.cal-cell.other-month { background: #f6f4ed; color: var(--text-faint); }
+.cal-cell.other-month:hover { background: #ece9df; }
+.cal-cell.today .day-num {
+  background: var(--accent); color: white; border-radius: 999px;
+  width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
+}
+.cal-cell .day-num {
+  font-size: 12px; font-weight: 600; margin-bottom: 2px;
+  width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
+}
+.cal-event {
+  font-size: 10.5px; padding: 2px 6px; border-radius: 4px;
+  background: var(--bg-soft);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.3; font-weight: 500;
+  border-left: 3px solid var(--text-faint);
+}
+.cal-event.cat-festive { background: var(--cat-festive-bg); color: var(--cat-festive); border-color: var(--cat-festive); }
+.cal-event.cat-outdoor { background: var(--cat-outdoor-bg); color: var(--cat-outdoor); border-color: var(--cat-outdoor); }
+.cal-event.cat-arts    { background: var(--cat-arts-bg);    color: var(--cat-arts);    border-color: var(--cat-arts); }
+.cal-event.cat-kid     { background: var(--cat-kid-bg);     color: var(--cat-kid);     border-color: var(--cat-kid); }
+.cal-event.cat-novel   { background: var(--cat-novel-bg);   color: var(--cat-novel);   border-color: var(--cat-novel); }
+.cal-event.cat-food    { background: var(--cat-food-bg);    color: var(--cat-food);    border-color: var(--cat-food); }
+.cal-event.cat-getaway { background: var(--cat-getaway-bg); color: var(--cat-getaway); border-color: var(--cat-getaway); }
+.cal-event.done { opacity: 0.5; text-decoration: line-through; }
+.cal-more { font-size: 10px; color: var(--text-faint); padding: 0 6px; font-weight: 500; }
+
+.anytime-section { margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border); }
+.anytime-section h3 { font-size: 14px; color: var(--text-soft); margin: 0 0 8px; font-weight: 600; }
+
+/* ============ Modal ============ */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(20,20,18,0.45);
+  backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center;
+  z-index: 100; padding: 20px;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow-lg);
+  max-width: 540px; width: 100%; max-height: 90vh; overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+.modal-header {
+  display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-header h2 { margin: 0; font-size: 16px; flex: 1; }
+.modal-close {
+  background: transparent; border: none; cursor: pointer;
+  font-size: 22px; color: var(--text-faint); width: 32px; height: 32px;
+  border-radius: 8px; line-height: 1;
+}
+.modal-close:hover { background: var(--bg-soft); color: var(--text); }
+.modal-body { padding: 16px 18px 20px; }
+
+/* Profile modal */
+.profile-form { display: flex; flex-direction: column; gap: 14px; }
+.profile-form label { font-size: 12px; color: var(--text-soft); font-weight: 600; }
+.profile-form input[type=text] {
+  padding: 8px 12px; font-size: 14px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg-card); color: var(--text);
+}
+.profile-form input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.emoji-grid {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px;
+}
+.emoji-grid .emoji-pick {
+  font-size: 22px; padding: 8px;
+  background: var(--bg-soft); border: 2px solid transparent;
+  border-radius: 8px; cursor: pointer; text-align: center;
+}
+.emoji-grid .emoji-pick.active { border-color: var(--accent); background: var(--accent-soft); }
+.btn-primary {
+  background: var(--text); color: white; border: none;
+  padding: 9px 18px; font-size: 14px; font-weight: 500;
+  border-radius: 8px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn-primary:hover { opacity: 0.92; }
+
+/* Day events modal */
+.day-events-list { display: flex; flex-direction: column; gap: 10px; }
+.day-event-item {
+  display: flex; gap: 10px; padding: 10px;
+  background: var(--bg-soft); border-radius: 10px;
+  align-items: center;
+}
+.day-event-item .thumb-mini {
+  width: 60px; height: 60px; flex-shrink: 0; border-radius: 8px; overflow: hidden;
+}
+.day-event-item .thumb-mini svg { display: block; width: 100%; height: 100%; }
+.day-event-item .info { flex: 1; min-width: 0; }
+.day-event-item .info .name { font-size: 14px; font-weight: 600; }
+.day-event-item .info .meta { font-size: 12px; color: var(--text-soft); }
+
+/* Detail modal */
+.detail-modal { max-width: 620px; }
+.detail-thumb { aspect-ratio: 16 / 9; background: var(--bg-soft); }
+.detail-thumb svg { display: block; width: 100%; height: 100%; }
+.detail-body { padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 10px; }
+.detail-body h2 { margin: 0; font-size: 20px; line-height: 1.2; }
+.detail-body .meta-row { display: flex; gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+.detail-body .meta-row .meta-item { display: inline-flex; align-items: center; gap: 4px; }
+.detail-body .desc-full { font-size: 14px; color: var(--text); line-height: 1.55; margin: 4px 0; }
+.detail-body .tag-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.detail-body .action-row {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px;
+  padding-top: 14px; border-top: 1px solid var(--border);
+}
+.detail-interest-list {
+  display: flex; flex-direction: column; gap: 6px; margin-top: 6px;
+}
+.detail-interest-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px; background: var(--bg-soft); border-radius: 8px;
+  font-size: 13px;
+}
+.detail-interest-item .avatar-mini { width: 24px; height: 24px; font-size: 14px; }
+.detail-interest-empty { font-size: 12px; color: var(--text-faint); padding: 8px 0; font-style: italic; }
+
+/* ============ Empty / hero ============ */
+.empty {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-faint);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.empty .icon { font-size: 36px; opacity: 0.5; }
+.welcome-banner {
+  background: linear-gradient(135deg, #e8f0ff, #f3f0e7);
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 13px; color: var(--text-soft);
+  margin-bottom: 14px;
+}
+.welcome-banner .icon { font-size: 22px; }
+.welcome-banner b { color: var(--text); }
+
+/* Mobile */
+@media (max-width: 700px) {
+  .app { padding: 12px; }
+  .topbar { gap: 8px; }
+  .brand h1 { font-size: 18px; }
+  .grid { grid-template-columns: 1fr; }
+  .cal-cell { min-height: 80px; padding: 4px; }
+  .cal-event { font-size: 9.5px; padding: 1px 4px; }
+  .cal-grid .dow { padding: 6px 2px; font-size: 10px; }
+  .filter-search { max-width: 100%; }
+  .cal-header h2 { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <h1>Bay Area Summer & Fall 2026</h1>
+      <div class="sub">Festivals · Concerts · Outdoors · Kid-friendly · Day trips Napa → Monterey</div>
+    </div>
+    <button class="btn-primary" id="add-event-btn" title="Add your own event" style="padding:7px 12px;font-size:13px;">
+      + Add event
+    </button>
+    <button class="profile-chip" id="profile-btn" title="Edit your profile">
+      <span class="avatar" id="profile-emoji">😊</span>
+      <span style="display:flex;flex-direction:column;align-items:flex-start;">
+        <span class="name" id="profile-name">Set up profile</span>
+        <span class="stats" id="profile-stats"></span>
+      </span>
+    </button>
+  </div>
+
+  <div class="welcome-banner" id="welcome-banner" style="display:none">
+    <span class="icon">👋</span>
+    <div>
+      <b>Welcome!</b> Mark events you're <b>interested</b> in to coordinate with friends, or <b>done</b> to track what you've already enjoyed.
+      Share the URL with your friend group so they can do the same.
+    </div>
+  </div>
+
+  <div class="view-toggle">
+    <button class="active" data-view="grid"><span>▦</span> Grid</button>
+    <button data-view="calendar"><span>📅</span> Calendar</button>
+  </div>
+
+  <div class="filters">
+    <div class="filter-group">
+      <span class="label">Who</span>
+      <button class="chip active" data-filter="audience" data-value="all">All</button>
+      <button class="chip" data-filter="audience" data-value="kids">Kids 4-7</button>
+      <button class="chip" data-filter="audience" data-value="adults">Adults</button>
+    </div>
+    <div class="filter-group">
+      <span class="label">Type</span>
+      <button class="chip active" data-filter="category" data-value="all">All</button>
+      <button class="chip" data-filter="category" data-value="festive">Festive</button>
+      <button class="chip" data-filter="category" data-value="outdoor">Outdoor</button>
+      <button class="chip" data-filter="category" data-value="arts">Arts</button>
+      <button class="chip" data-filter="category" data-value="kid">Kid</button>
+      <button class="chip" data-filter="category" data-value="novel">Novel</button>
+      <button class="chip" data-filter="category" data-value="food">Food</button>
+      <button class="chip" data-filter="category" data-value="getaway">Getaway</button>
+    </div>
+    <div class="filter-group">
+      <span class="label">When</span>
+      <button class="chip active" data-filter="timing" data-value="all">All</button>
+      <button class="chip" data-filter="timing" data-value="dated">📅 Dated</button>
+      <button class="chip" data-filter="timing" data-value="anytime">∞ Anytime</button>
+    </div>
+    <div class="filter-group">
+      <span class="label">Show</span>
+      <button class="chip active" data-filter="showtype" data-value="all">All</button>
+      <button class="chip" data-filter="showtype" data-value="concert">🎤 Concerts</button>
+      <button class="chip" data-filter="showtype" data-value="comedy">😂 Comedy</button>
+    </div>
+    <div class="filter-group" style="margin-left:auto">
+      <input class="filter-search" id="search" type="text" placeholder="Search events…">
+      <button class="chip" id="hide-done-chip" data-filter="hidedone">Hide done</button>
+      <button class="chip" id="my-interest-chip" data-filter="myinterest">My interests</button>
+      <button class="reset-link" id="reset">Reset</button>
+    </div>
+  </div>
+
+  <div class="count-badge" id="count-badge"></div>
+
+  <!-- Grid view -->
+  <div id="view-grid">
+    <div class="grid" id="grid"></div>
+    <div id="empty" class="empty" style="display:none">
+      <div class="icon">🌫️</div>
+      <div>No events match these filters.</div>
+      <button class="btn-primary" onclick="resetFilters()">Reset filters</button>
+    </div>
+  </div>
+
+  <!-- Calendar view -->
+  <div id="view-calendar" style="display:none">
+    <div class="cal-header">
+      <button class="nav-btn" id="cal-prev">‹</button>
+      <h2 id="cal-month-label">June 2026</h2>
+      <button class="nav-btn" id="cal-next">›</button>
+      <div class="month-counts" id="cal-counts"></div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="anytime-section">
+      <h3 id="anytime-h">Available anytime this season</h3>
+      <div class="grid" id="anytime-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Profile modal -->
+<div class="modal-backdrop" id="profile-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Your profile</h2>
+      <button class="modal-close" data-close>×</button>
+    </div>
+    <div class="modal-body">
+      <div class="profile-form">
+        <div>
+          <label>Your name</label>
+          <input type="text" id="profile-input-name" placeholder="e.g. Kapeesh" maxlength="20">
+        </div>
+        <div>
+          <label>Pick an avatar</label>
+          <div class="emoji-grid" id="emoji-grid"></div>
+        </div>
+        <button class="btn-primary" id="profile-save">Save profile</button>
+        <div style="font-size:11px;color:var(--text-faint);text-align:center;margin-top:4px">
+          Your name + avatar will appear when you mark interest in events.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Day events modal -->
+<div class="modal-backdrop" id="day-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="day-modal-title">Events</h2>
+      <button class="modal-close" data-close>×</button>
+    </div>
+    <div class="modal-body">
+      <div class="day-events-list" id="day-events-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Event modal -->
+<div class="modal-backdrop" id="add-event-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Add your own event</h2>
+      <button class="modal-close" data-close>×</button>
+    </div>
+    <div class="modal-body">
+      <div class="profile-form">
+        <div>
+          <label>Name *</label>
+          <input type="text" id="add-name" placeholder="e.g. Birthday brunch at Tartine" maxlength="80">
+        </div>
+        <div>
+          <label>Date *</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="date" id="add-start" style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:8px">
+            <span style="color:var(--text-faint);font-size:12px">to</span>
+            <input type="date" id="add-end" style="flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:8px" title="Optional — leave blank for single-day">
+          </div>
+          <div style="font-size:11px;color:var(--text-faint);margin-top:4px">Leave end blank for a single day. Check "Anytime" below for evergreen venues.</div>
+          <label style="display:flex;align-items:center;gap:6px;margin-top:6px;font-weight:400;font-size:13px;color:var(--text);text-transform:none;letter-spacing:0">
+            <input type="checkbox" id="add-anytime"> No specific date — anytime / year-round
+          </label>
+        </div>
+        <div>
+          <label>Location *</label>
+          <input type="text" id="add-location" placeholder="e.g. 600 Guerrero St, San Francisco" maxlength="100">
+        </div>
+        <div>
+          <label>Who's it for? *</label>
+          <select id="add-audience" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:white">
+            <option value="both">All ages</option>
+            <option value="kids">Kids 4-7</option>
+            <option value="adults">Adults</option>
+          </select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <label>Type *</label>
+            <select id="add-category" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:white">
+              <option value="festive">Festive</option>
+              <option value="outdoor">Outdoor</option>
+              <option value="arts">Arts</option>
+              <option value="kid">Kid-focused</option>
+              <option value="novel">Novel</option>
+              <option value="food">Food</option>
+              <option value="getaway">Getaway</option>
+            </select>
+          </div>
+          <div>
+            <label>Cost</label>
+            <input type="text" id="add-cost" placeholder="$$" maxlength="6" value="$$" style="width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px">
+          </div>
+        </div>
+        <div>
+          <label>Description</label>
+          <input type="text" id="add-desc" placeholder="What's fun about it?" maxlength="200">
+        </div>
+        <div>
+          <label>Link (URL)</label>
+          <input type="url" id="add-url" placeholder="https://...">
+        </div>
+        <div>
+          <label>Image URL (optional)</label>
+          <input type="url" id="add-img" placeholder="https://...image.jpg — leave blank for auto thumbnail">
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn-primary" id="add-save">Save event</button>
+          <button class="reset-link" id="add-cancel">Cancel</button>
+        </div>
+        <div id="add-error" style="font-size:12px;color:#dc2626;display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-backdrop" id="detail-modal">
+  <div class="modal detail-modal">
+    <div class="modal-header">
+      <h2 style="font-size:14px;color:var(--text-soft);font-weight:500" id="detail-modal-region">Bay Area</h2>
+      <button class="modal-close" data-close>×</button>
+    </div>
+    <div class="detail-thumb" id="detail-thumb"></div>
+    <div class="detail-body" id="detail-body"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const BUILTIN_EVENTS = __EVENTS_DATA__;
+const FRIENDS = __FRIENDS_DATA__;
+const FRIEND_INTERESTS = __FRIEND_INTERESTS_DATA__;
+
+// Curated category-themed Unsplash photo IDs used as fallback when no Wikipedia
+// image is found. Multiple per category so events get visual variety (hashed by ID).
+const CAT_FALLBACK_IMGS = {
+  festive: [
+    "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600",
+    "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600",
+    "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=600",
+    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600"
+  ],
+  outdoor: [
+    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600",
+    "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600",
+    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600"
+  ],
+  arts: [
+    "https://images.unsplash.com/photo-1565060169187-5284ce4f00c2?w=600",
+    "https://images.unsplash.com/photo-1544967919-44546e34de3d?w=600",
+    "https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=600",
+    "https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=600"
+  ],
+  kid: [
+    "https://images.unsplash.com/photo-1551966775-a4ddc8df052b?w=600",
+    "https://images.unsplash.com/photo-1602536052359-ef94c21c5948?w=600",
+    "https://images.unsplash.com/photo-1597524678053-99eea1d96abe?w=600",
+    "https://images.unsplash.com/photo-1611042553365-9b101441c135?w=600"
+  ],
+  novel: [
+    "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600",
+    "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600",
+    "https://images.unsplash.com/photo-1517495306984-f84210f9daa8?w=600",
+    "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=600"
+  ],
+  food: [
+    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600",
+    "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600",
+    "https://images.unsplash.com/photo-1481833761820-0509d3217039?w=600",
+    "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600"
+  ],
+  getaway: [
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600",
+    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600",
+    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600",
+    "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=600"
+  ]
+};
+function fallbackImgFor(ev) {
+  const pool = CAT_FALLBACK_IMGS[ev.category] || CAT_FALLBACK_IMGS.novel;
+  let h = 0; for (const c of (ev.id||"x")) h = (h*31 + c.charCodeAt(0)) >>> 0;
+  return pool[h % pool.length];
+}
+
+// Load custom events from localStorage and combine with built-ins
+function loadCustomEvents() {
+  try {
+    const raw = localStorage.getItem("tripplan-v1-custom") || "[]";
+    return JSON.parse(raw);
+  } catch(e) { return []; }
+}
+function saveCustomEvents(arr) {
+  localStorage.setItem("tripplan-v1-custom", JSON.stringify(arr));
+}
+let CUSTOM_EVENTS = loadCustomEvents();
+const EVENTS = [];
+function rebuildEvents() {
+  EVENTS.length = 0;
+  EVENTS.push(...CUSTOM_EVENTS, ...BUILTIN_EVENTS);
+}
+rebuildEvents();
+
+const AVATAR_EMOJIS = ["😊","🦊","🌸","🌟","🎨","🐧","🌻","🐯","🦄","🐙","🐢","🦋","🍄","🌈","🚀","🎸","⚡","☀️","🌙","🐼","🦉","🌺","🍉","🐳"];
+
+const CAT_LABEL = {
+  festive:"Festive", outdoor:"Outdoor", arts:"Arts",
+  kid:"Kid-focused", novel:"Novel", food:"Food", getaway:"Getaway"
+};
+const CAT_EMOJI = {
+  festive:"🎉", outdoor:"🌲", arts:"🎨",
+  kid:"🧒", novel:"✨", food:"🍽️", getaway:"🏞️"
+};
+const CAT_GRADIENT = {
+  festive: ["#fce8f0","#fbcfe8","#f9a8d4"],
+  outdoor: ["#e6f4ea","#bbf7d0","#86efac"],
+  arts:    ["#efe6ff","#ddd6fe","#c4b5fd"],
+  kid:     ["#fff3d6","#fde68a","#fcd34d"],
+  novel:   ["#e6f0ff","#bfdbfe","#93c5fd"],
+  food:    ["#ffe9d6","#fed7aa","#fdba74"],
+  getaway: ["#d8f0ee","#a7f3d0","#6ee7b7"]
+};
+const AUD_LABEL = { kids:"Kids 4–7", adults:"Adults", both:"All ages" };
+const REGION_LABEL = { bayarea:"Bay Area", amsterdam:"Amsterdam", mp:"Mumbai & Pune" };
+const REGION_CLASS = { bayarea:"bay", amsterdam:"ams", mp:"mp" };
+const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOW_SHORT = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const TODAY_ISO = "2026-05-20";
+
+// ============================================================
+// STORAGE
+// ============================================================
+const STORAGE_KEY = "tripplan-v1";
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    return {
+      user: s.user || { name: "", emoji: "😊" },
+      done: s.done || {},
+      myInterest: s.myInterest || {},
+      view: s.view || "grid",
+      calMonth: s.calMonth || "2026-06"
+    };
+  } catch(e) {
+    return { user:{name:"",emoji:"😊"}, done:{}, myInterest:{}, view:"grid", calMonth:"2026-06" };
+  }
+}
+function saveState() {
+  const s = {
+    user: state.user, done: state.done, myInterest: state.myInterest,
+    view: state.view, calMonth: state.calMonth
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+}
+
+const state = loadState();
+const filters = { region:"all", audience:"all", category:"all", timing:"all", showtype:"all", q:"", hideDone:false, myInterest:false };
+
+function isDatedEvent(ev) {
+  // True when this event happens on specific dates (not a year-round venue)
+  return !!ev.start && !ev.anytime;
+}
+function isAnytimeEvent(ev) {
+  // True when this event is open year-round / has no specific date
+  return ev.anytime || !ev.start;
+}
+
+// ============================================================
+// EVENT HELPERS
+// ============================================================
+function getInterestedFor(eventId) {
+  // returns array of {id, name, emoji, color, isMe}
+  const out = [];
+  if (state.myInterest[eventId] && state.user.name) {
+    out.push({ id: "_me", name: state.user.name, emoji: state.user.emoji, color: "#1f1f1f", isMe: true });
+  }
+  for (const f of FRIENDS) {
+    if ((FRIEND_INTERESTS[f.id] || []).includes(eventId)) {
+      out.push({ ...f, isMe: false });
+    }
+  }
+  return out;
+}
+
+function matches(ev) {
+  if (filters.region !== "all" && ev.region !== filters.region) return false;
+  if (filters.audience !== "all") {
+    if (filters.audience === "kids" && !(ev.audience === "kids" || ev.audience === "both")) return false;
+    if (filters.audience === "adults" && !(ev.audience === "adults" || ev.audience === "both")) return false;
+  }
+  if (filters.category !== "all" && ev.category !== filters.category) return false;
+  if (filters.timing === "dated" && !isDatedEvent(ev)) return false;
+  if (filters.timing === "anytime" && !isAnytimeEvent(ev)) return false;
+  if (filters.showtype !== "all" && ev.show_type !== filters.showtype) return false;
+  if (filters.hideDone && state.done[ev.id]) return false;
+  if (filters.myInterest && !state.myInterest[ev.id]) return false;
+  if (filters.q) {
+    const q = filters.q.toLowerCase();
+    const hay = (ev.name + " " + ev.location + " " + ev.description + " " + ev.dates_display).toLowerCase();
+    if (!hay.includes(q)) return false;
+  }
+  return true;
+}
+
+function isoLocal(d) {
+  // Format Date as local YYYY-MM-DD (no timezone shift)
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+}
+function isoDayOfWeek(iso) {
+  // Day-of-week for an ISO date, computed in UTC to avoid local TZ shift
+  const [y,m,d] = iso.split('-').map(Number);
+  return new Date(Date.UTC(y, m-1, d)).getUTCDay();
+}
+function addIsoDays(iso, n) {
+  const [y,m,d] = iso.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m-1, d));
+  dt.setUTCDate(dt.getUTCDate() + n);
+  return dt.toISOString().slice(0,10);
+}
+function eventOccursOnDate(ev, isoDate) {
+  // Does this event occur on this exact date?
+  if (!ev.start) return false;
+  if (isoDate < ev.start) return false;
+  if (ev.end && isoDate > ev.end) return false;
+  // Single date
+  if (!ev.end || ev.end === ev.start) return ev.start === isoDate;
+  // Recurring weekday within range
+  if (ev.recurring_weekday !== null && ev.recurring_weekday !== undefined) {
+    return isoDayOfWeek(isoDate) === ev.recurring_weekday;
+  }
+  return true; // multi-day event, this date falls in range
+}
+
+// ============================================================
+// SVG THUMBNAIL GENERATOR
+// ============================================================
+function svgThumb(ev) {
+  const [c1, c2, c3] = CAT_GRADIENT[ev.category] || CAT_GRADIENT.novel;
+  const emoji = CAT_EMOJI[ev.category] || "✨";
+  // Hash event name for variation
+  let h = 0;
+  for (const c of ev.id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const angle = 90 + (h % 90);
+  const dot1x = 20 + (h % 40);
+  const dot1y = 30 + ((h>>3) % 40);
+  const dot2x = 60 + ((h>>5) % 30);
+  const dot2y = 50 + ((h>>7) % 30);
+  // Initials
+  const initials = ev.name.replace(/[^a-zA-Z ]/g, '').split(/\s+/).filter(w => w).slice(0,2).map(w => w[0]).join('').toUpperCase() || "?";
+  return `<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="g${h}" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(${angle} 0.5 0.5)">
+        <stop offset="0" stop-color="${c1}"/>
+        <stop offset="0.5" stop-color="${c2}"/>
+        <stop offset="1" stop-color="${c3}"/>
+      </linearGradient>
+    </defs>
+    <rect width="320" height="180" fill="url(#g${h})"/>
+    <circle cx="${dot1x*3.2}" cy="${dot1y*1.8}" r="40" fill="rgba(255,255,255,0.25)"/>
+    <circle cx="${dot2x*3.2}" cy="${dot2y*1.8}" r="55" fill="rgba(255,255,255,0.18)"/>
+    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+      font-family="-apple-system, BlinkMacSystemFont, sans-serif"
+      font-weight="700" font-size="42" fill="rgba(255,255,255,0.85)"
+      style="letter-spacing:-1px">${initials}</text>
+    <text x="295" y="155" text-anchor="end" font-size="32" opacity="0.55">${emoji}</text>
+  </svg>`;
+}
+
+// ============================================================
+// RENDERING — GRID
+// ============================================================
+function renderGrid(matching) {
+  const grid = document.getElementById("grid");
+  if (matching.length === 0) {
+    grid.innerHTML = "";
+    document.getElementById("empty").style.display = "flex";
+    return;
+  }
+  document.getElementById("empty").style.display = "none";
+
+  // Sort: by start date asc, then anytime last
+  matching = matching.slice().sort((a,b) => {
+    const aHas = a.start ? 0 : 1;
+    const bHas = b.start ? 0 : 1;
+    if (aHas !== bHas) return aHas - bHas;
+    return (a.start || "z").localeCompare(b.start || "z");
+  });
+
+  grid.innerHTML = matching.map(ev => cardHTML(ev)).join("");
+  attachCardHandlers(grid);
+}
+
+function cardHTML(ev) {
+  const isDone = !!state.done[ev.id];
+  const interested = getInterestedFor(ev.id);
+  const interestedStack = interested.slice(0,4).map(p =>
+    `<span class="avatar-mini" title="${escapeAttr(p.name)}" style="background:${p.color || "#f3f0e7"}33">${p.emoji}</span>`
+  ).join("");
+  const moreCount = interested.length > 4 ? `<span class="more">+${interested.length-4}</span>` : "";
+  const dateLabel = ev.dates_display ? `<div class="date-overlay">${escapeHtml(ev.dates_display)}</div>` : "";
+
+  const fallback = fallbackImgFor(ev);
+  const primary = ev.img || fallback;
+  const imgEl = `<img src="${escapeAttr(primary)}" alt="" loading="lazy"
+    style="width:100%;height:100%;object-fit:cover;display:block"
+    onerror="this.onerror=null;this.src='${escapeAttr(fallback)}';this.dataset.fallback='1';if(this.src===this.dataset.lastSrc){this.style.display='none';this.parentElement.querySelector('.svg-thumb').style.display='block';}this.dataset.lastSrc=this.src;">`;
+  const customBadge = ev._custom ? `<span class="region-badge" style="left:auto;right:42px;background:#1f1f1f;color:white">Custom</span><button class="del-custom" data-eid="${ev.id}" title="Delete" style="position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:999px;background:rgba(255,255,255,0.92);border:none;cursor:pointer;font-size:14px;font-weight:700;color:#dc2626;display:flex;align-items:center;justify-content:center">×</button>` : "";
+
+  return `<div class="card ${isDone?'done':''}" data-eid="${ev.id}">
+    <div class="thumb">
+      ${imgEl}
+      <div class="svg-thumb" style="display:none;position:absolute;inset:0">${svgThumb(ev)}</div>
+      ${customBadge}
+      ${dateLabel}
+      <span class="done-mark">✓</span>
+    </div>
+    <div class="body">
+      <h3>${escapeHtml(ev.name)}</h3>
+      <div class="loc">${escapeHtml(ev.location)}</div>
+      <div class="desc">${escapeHtml(ev.description)}</div>
+      <div class="tag-row">
+        <span class="tag cat-${ev.category}">${CAT_EMOJI[ev.category]} ${CAT_LABEL[ev.category]}</span>
+        <span class="tag aud">${AUD_LABEL[ev.audience]}</span>
+        <span class="tag cost">${escapeHtml(ev.cost)}</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn-action done-btn ${isDone?'active':''}" data-act="done">
+        <span class="check">${isDone?'✓':'○'}</span> ${isDone?'Done':'Mark done'}
+      </button>
+      <button class="btn-action interest-btn ${state.myInterest[ev.id]?'active':''}" data-act="interest">
+        <span>${state.myInterest[ev.id]?'★':'☆'}</span> ${state.myInterest[ev.id]?'Going':'Interested'}
+      </button>
+      <div class="interest-stack">
+        ${interestedStack}${moreCount}
+      </div>
+    </div>
+  </div>`;
+}
+
+function attachCardHandlers(root) {
+  root.querySelectorAll(".card").forEach(card => {
+    const eid = card.dataset.eid;
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("button")) return;
+      openDetail(eid);
+    });
+  });
+  root.querySelectorAll(".btn-action[data-act=done]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const eid = btn.closest(".card").dataset.eid;
+      toggleDone(eid);
+    });
+  });
+  root.querySelectorAll(".btn-action[data-act=interest]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const eid = btn.closest(".card").dataset.eid;
+      toggleInterest(eid);
+    });
+  });
+}
+
+// ============================================================
+// CALENDAR VIEW
+// ============================================================
+function renderCalendar(matching) {
+  const [yr, mo] = state.calMonth.split("-").map(Number);
+  const monthLabel = `${MONTH_NAMES[mo-1]} ${yr}`;
+  document.getElementById("cal-month-label").textContent = monthLabel;
+
+  // Filter to this month
+  const monthStart = `${yr}-${String(mo).padStart(2,'0')}-01`;
+  const daysInMonth = new Date(yr, mo, 0).getDate();
+  const monthEnd = `${yr}-${String(mo).padStart(2,'0')}-${String(daysInMonth).padStart(2,'0')}`;
+
+  // First day of week to render (Sunday-based)
+  const firstDayOfWeek = new Date(yr, mo-1, 1).getDay();
+  const cells = [];
+  // Previous month tail
+  for (let i = 0; i < firstDayOfWeek; i++) {
+    const d = new Date(yr, mo-1, -firstDayOfWeek + 1 + i);
+    cells.push({ date: d, otherMonth: true });
+  }
+  // This month
+  for (let day = 1; day <= daysInMonth; day++) {
+    cells.push({ date: new Date(yr, mo-1, day), otherMonth: false });
+  }
+  // Next month head (fill to multiple of 7)
+  while (cells.length % 7 !== 0) {
+    const last = cells[cells.length-1].date;
+    const d = new Date(last.getFullYear(), last.getMonth(), last.getDate()+1);
+    cells.push({ date: d, otherMonth: true });
+  }
+
+  // Build per-day events from matching set, excluding anytime
+  const dated = matching.filter(e => e.start && !e.anytime);
+  const eventsForDay = {};  // iso -> [events]
+  for (const ev of dated) {
+    // Iterate dates within month range
+    const start = ev.start;
+    const end = ev.end || ev.start;
+    let cursor = start > monthStart ? start : monthStart;
+    const stopAt = end < monthEnd ? end : monthEnd;
+    while (cursor <= stopAt) {
+      if (eventOccursOnDate(ev, cursor)) {
+        if (!eventsForDay[cursor]) eventsForDay[cursor] = [];
+        eventsForDay[cursor].push(ev);
+      }
+      cursor = addIsoDays(cursor, 1);
+    }
+  }
+
+  // Render
+  const grid = document.getElementById("cal-grid");
+  let html = DOW_SHORT.map(d => `<div class="dow">${d}</div>`).join("");
+  for (const cell of cells) {
+    const d = cell.date;
+    const iso = isoLocal(d);
+    const dayEvs = eventsForDay[iso] || [];
+    const isToday = iso === TODAY_ISO;
+    const visible = dayEvs.slice(0, 3);
+    const moreN = dayEvs.length - visible.length;
+    html += `<div class="cal-cell ${cell.otherMonth?'other-month':''} ${isToday?'today':''}" data-iso="${iso}">
+      <span class="day-num">${d.getDate()}</span>
+      ${visible.map(ev => `<div class="cal-event cat-${ev.category} ${state.done[ev.id]?'done':''}" title="${escapeAttr(ev.name)}">${escapeHtml(ev.name)}</div>`).join("")}
+      ${moreN > 0 ? `<div class="cal-more">+${moreN} more</div>` : ""}
+    </div>`;
+  }
+  grid.innerHTML = html;
+
+  // Counts
+  const monthEvents = Object.values(eventsForDay).reduce((a,b)=>a+b.length, 0);
+  const uniqueEvents = new Set(Object.values(eventsForDay).flat().map(e => e.id)).size;
+  document.getElementById("cal-counts").textContent = `${uniqueEvents} events · ${monthEvents} occurrences this month`;
+
+  // Click cell to open day modal
+  grid.querySelectorAll(".cal-cell").forEach(cell => {
+    cell.addEventListener("click", () => {
+      const iso = cell.dataset.iso;
+      const evs = eventsForDay[iso] || [];
+      if (evs.length === 0) return;
+      openDayModal(iso, evs);
+    });
+  });
+
+  // Anytime section
+  const anytime = matching.filter(e => e.anytime || !e.start);
+  document.getElementById("anytime-h").textContent =
+    `Available anytime this season (${anytime.length})`;
+  document.getElementById("anytime-grid").innerHTML = anytime.slice(0, 60).map(cardHTML).join("");
+  attachCardHandlers(document.getElementById("anytime-grid"));
+
+  // Nav buttons
+  document.getElementById("cal-prev").disabled = state.calMonth <= "2026-05";
+  document.getElementById("cal-next").disabled = state.calMonth >= "2026-12";
+}
+
+// ============================================================
+// MODALS
+// ============================================================
+function openProfileModal() {
+  document.getElementById("profile-input-name").value = state.user.name || "";
+  renderEmojiGrid();
+  document.getElementById("profile-modal").classList.add("open");
+}
+function renderEmojiGrid() {
+  document.getElementById("emoji-grid").innerHTML =
+    AVATAR_EMOJIS.map(em => `<div class="emoji-pick ${em===state.user.emoji?'active':''}" data-emoji="${em}">${em}</div>`).join("");
+  document.querySelectorAll(".emoji-pick").forEach(el => {
+    el.addEventListener("click", () => {
+      state.user.emoji = el.dataset.emoji;
+      renderEmojiGrid();
+    });
+  });
+}
+document.getElementById("profile-btn").addEventListener("click", openProfileModal);
+document.getElementById("profile-save").addEventListener("click", () => {
+  state.user.name = document.getElementById("profile-input-name").value.trim() || state.user.name || "Me";
+  saveState();
+  updateProfileChip();
+  closeModals();
+  render();
+});
+
+function openDayModal(iso, evs) {
+  const d = new Date(iso + "T00:00:00");
+  const label = `${DOW_SHORT[d.getDay()]} ${MONTH_NAMES[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  document.getElementById("day-modal-title").textContent = label;
+  document.getElementById("day-events-list").innerHTML = evs.map(ev => `
+    <div class="day-event-item" data-eid="${ev.id}" style="cursor:pointer">
+      <div class="thumb-mini">${ev.img ? `<img src="${escapeAttr(ev.img)}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.src='${escapeAttr(fallbackImgFor(ev))}';">` : `<img src="${escapeAttr(fallbackImgFor(ev))}" alt="" style="width:100%;height:100%;object-fit:cover">`}</div>
+      <div class="info">
+        <div class="name">${escapeHtml(ev.name)}</div>
+        <div class="meta">${escapeHtml(ev.location)} · ${escapeHtml(ev.dates_display)}</div>
+        <div class="tag-row" style="margin-top:4px">
+          <span class="tag cat-${ev.category}">${CAT_LABEL[ev.category]}</span>
+          <span class="tag aud">${AUD_LABEL[ev.audience]}</span>
+        </div>
+      </div>
+    </div>
+  `).join("");
+  document.getElementById("day-events-list").querySelectorAll(".day-event-item").forEach(el => {
+    el.addEventListener("click", () => {
+      closeModals();
+      openDetail(el.dataset.eid);
+    });
+  });
+  document.getElementById("day-modal").classList.add("open");
+}
+
+function openDetail(eid) {
+  const ev = EVENTS.find(e => e.id === eid);
+  if (!ev) return;
+  document.getElementById("detail-modal-region").innerHTML =
+    `<span style="color:var(--r-${REGION_CLASS[ev.region]})">${REGION_LABEL[ev.region]}</span>`;
+  const dFallback = fallbackImgFor(ev);
+  const dPrimary = ev.img || dFallback;
+  document.getElementById("detail-thumb").innerHTML =
+    `<img src="${escapeAttr(dPrimary)}" alt="" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.src='${escapeAttr(dFallback)}';">`;
+
+  const interested = getInterestedFor(ev.id);
+  const interestList = interested.length === 0
+    ? `<div class="detail-interest-empty">No one yet — be the first to express interest!</div>`
+    : interested.map(p => `
+        <div class="detail-interest-item">
+          <span class="avatar-mini" style="background:${p.color || '#f3f0e7'}33;border-radius:999px;display:flex;align-items:center;justify-content:center;">${p.emoji}</span>
+          <span>${escapeHtml(p.name)}${p.isMe?' <span style="color:var(--text-faint);font-size:11px">(you)</span>':''}</span>
+        </div>`).join("");
+
+  const isDone = !!state.done[ev.id];
+  const isInterested = !!state.myInterest[ev.id];
+
+  document.getElementById("detail-body").innerHTML = `
+    <h2>${escapeHtml(ev.name)}</h2>
+    <div class="meta-row">
+      <span class="meta-item">📅 ${escapeHtml(ev.dates_display)}</span>
+      <span class="meta-item">📍 ${escapeHtml(ev.location)}</span>
+      <span class="meta-item">💰 ${escapeHtml(ev.cost)}</span>
+    </div>
+    <div class="tag-row">
+      <span class="tag cat-${ev.category}">${CAT_EMOJI[ev.category]} ${CAT_LABEL[ev.category]}</span>
+      <span class="tag aud">${AUD_LABEL[ev.audience]}</span>
+    </div>
+    <div class="desc-full">${escapeHtml(ev.description)}</div>
+    <div>
+      <div style="font-size:12px;color:var(--text-soft);font-weight:600;margin-bottom:4px">
+        ${interested.length} interested
+      </div>
+      <div class="detail-interest-list">${interestList}</div>
+    </div>
+    <div class="action-row">
+      <button class="btn-action done-btn ${isDone?'active':''}" id="d-done">
+        ${isDone?'✓ Done':'Mark as done'}
+      </button>
+      <button class="btn-action interest-btn ${isInterested?'active':''}" id="d-interest">
+        ${isInterested?"★ I'm going":"☆ I'm interested"}
+      </button>
+      <a href="${escapeAttr(ev.url)}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-left:auto;text-decoration:none">
+        Open site ↗
+      </a>
+    </div>
+  `;
+  document.getElementById("d-done").onclick = () => { toggleDone(ev.id); openDetail(ev.id); };
+  document.getElementById("d-interest").onclick = () => { toggleInterest(ev.id); openDetail(ev.id); };
+
+  document.getElementById("detail-modal").classList.add("open");
+}
+
+function closeModals() {
+  document.querySelectorAll(".modal-backdrop").forEach(m => m.classList.remove("open"));
+}
+document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", closeModals));
+document.querySelectorAll(".modal-backdrop").forEach(m =>
+  m.addEventListener("click", (e) => { if (e.target === m) closeModals(); })
+);
+
+// ============================================================
+// ACTIONS
+// ============================================================
+function toggleDone(eid) {
+  if (state.done[eid]) delete state.done[eid];
+  else { state.done[eid] = true; delete state.myInterest[eid]; }
+  saveState(); render();
+}
+function toggleInterest(eid) {
+  if (!state.user.name) { openProfileModal(); return; }
+  if (state.myInterest[eid]) delete state.myInterest[eid];
+  else state.myInterest[eid] = true;
+  saveState(); render();
+}
+
+function setView(v) {
+  state.view = v;
+  saveState();
+  document.querySelectorAll(".view-toggle button").forEach(b => {
+    b.classList.toggle("active", b.dataset.view === v);
+  });
+  document.getElementById("view-grid").style.display = (v === "grid") ? "" : "none";
+  document.getElementById("view-calendar").style.display = (v === "calendar") ? "" : "none";
+  render();
+}
+
+// ============================================================
+// RENDER LOOP
+// ============================================================
+function render() {
+  updateProfileChip();
+  const matching = EVENTS.filter(matches);
+  document.getElementById("count-badge").textContent =
+    `${matching.length} of ${EVENTS.length} events`;
+
+  if (state.view === "grid") {
+    renderGrid(matching);
+  } else {
+    renderCalendar(matching);
+  }
+}
+
+function updateProfileChip() {
+  const hasName = !!state.user.name;
+  document.getElementById("profile-emoji").textContent = state.user.emoji;
+  document.getElementById("profile-name").textContent = hasName ? state.user.name : "Set up profile";
+  const doneCount = Object.keys(state.done).length;
+  const interestCount = Object.keys(state.myInterest).length;
+  document.getElementById("profile-stats").textContent =
+    hasName ? `${interestCount} interested · ${doneCount} done` : "";
+
+  document.getElementById("welcome-banner").style.display = hasName ? "none" : "flex";
+}
+
+function resetFilters() {
+  filters.region = "all"; filters.audience = "all"; filters.category = "all"; filters.timing = "all"; filters.showtype = "all";
+  filters.q = ""; filters.hideDone = false; filters.myInterest = false;
+  document.getElementById("search").value = "";
+  document.querySelectorAll(".chip[data-filter]").forEach(c => {
+    if (c.dataset.value === "all") c.classList.add("active");
+    else c.classList.remove("active");
+    c.classList.remove("bay","ams","mp","cat-festive","cat-outdoor","cat-arts","cat-kid","cat-novel","cat-food","cat-getaway");
+  });
+  document.getElementById("hide-done-chip").classList.remove("active");
+  document.getElementById("my-interest-chip").classList.remove("active");
+  render();
+}
+window.resetFilters = resetFilters;
+
+// ============================================================
+// EVENTS / BINDINGS
+// ============================================================
+document.querySelectorAll(".chip[data-filter=region], .chip[data-filter=audience], .chip[data-filter=category], .chip[data-filter=timing], .chip[data-filter=showtype]").forEach(chip => {
+  chip.addEventListener("click", () => {
+    const f = chip.dataset.filter;
+    const v = chip.dataset.value;
+    filters[f] = v;
+    document.querySelectorAll(`.chip[data-filter="${f}"]`).forEach(c => {
+      c.classList.remove("active","bay","ams","mp","cat-festive","cat-outdoor","cat-arts","cat-kid","cat-novel","cat-food","cat-getaway");
+    });
+    chip.classList.add("active");
+    if (f === "region" && v !== "all") chip.classList.add(REGION_CLASS[v] || "");
+    if (f === "category" && v !== "all") chip.classList.add("cat-" + v);
+    render();
+  });
+});
+
+document.getElementById("hide-done-chip").addEventListener("click", () => {
+  filters.hideDone = !filters.hideDone;
+  document.getElementById("hide-done-chip").classList.toggle("active", filters.hideDone);
+  render();
+});
+document.getElementById("my-interest-chip").addEventListener("click", () => {
+  filters.myInterest = !filters.myInterest;
+  document.getElementById("my-interest-chip").classList.toggle("active", filters.myInterest);
+  render();
+});
+
+let searchTimer;
+document.getElementById("search").addEventListener("input", (e) => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    filters.q = e.target.value.trim();
+    render();
+  }, 120);
+});
+
+document.getElementById("reset").addEventListener("click", resetFilters);
+
+document.querySelectorAll(".view-toggle button").forEach(b => {
+  b.addEventListener("click", () => setView(b.dataset.view));
+});
+
+document.getElementById("cal-prev").addEventListener("click", () => {
+  const [y,m] = state.calMonth.split("-").map(Number);
+  const d = new Date(y, m-2, 1);
+  state.calMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  saveState(); render();
+});
+document.getElementById("cal-next").addEventListener("click", () => {
+  const [y,m] = state.calMonth.split("-").map(Number);
+  const d = new Date(y, m, 1);
+  state.calMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  saveState(); render();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeModals();
+});
+
+// ============================================================
+// UTIL
+// ============================================================
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+  }[m]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+// ============================================================
+// MANUAL ADD EVENT
+// ============================================================
+function openAddEventModal() {
+  ["add-name","add-start","add-end","add-location","add-desc","add-url","add-img"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+  document.getElementById("add-cost").value = "$$";
+  document.getElementById("add-anytime").checked = false;
+  document.getElementById("add-region").value = "bayarea";
+  document.getElementById("add-audience").value = "both";
+  document.getElementById("add-category").value = "festive";
+  document.getElementById("add-error").style.display = "none";
+  document.getElementById("add-event-modal").classList.add("open");
+  setTimeout(() => document.getElementById("add-name").focus(), 50);
+}
+
+function saveAddedEvent() {
+  const name = document.getElementById("add-name").value.trim();
+  const location = document.getElementById("add-location").value.trim();
+  const anytime = document.getElementById("add-anytime").checked;
+  const start = document.getElementById("add-start").value;
+  let end = document.getElementById("add-end").value || start;
+  const region = "bayarea";
+  const audience = document.getElementById("add-audience").value;
+  const category = document.getElementById("add-category").value;
+  const description = document.getElementById("add-desc").value.trim();
+  const cost = document.getElementById("add-cost").value.trim() || "$$";
+  const url = document.getElementById("add-url").value.trim();
+  const img = document.getElementById("add-img").value.trim();
+
+  const err = document.getElementById("add-error");
+  if (!name) { err.textContent = "Name is required"; err.style.display = "block"; return; }
+  if (!location) { err.textContent = "Location is required"; err.style.display = "block"; return; }
+  if (!anytime && !start) { err.textContent = "Date is required (or check Anytime)"; err.style.display = "block"; return; }
+  if (end && start && end < start) { err.textContent = "End date must be after start"; err.style.display = "block"; return; }
+
+  // Build dates_display
+  let dates_display = "";
+  if (anytime) dates_display = "Anytime / year-round";
+  else if (start === end) {
+    const d = new Date(start + "T00:00:00");
+    dates_display = `${DOW_SHORT[d.getDay()]} ${MONTH_NAMES[d.getMonth()].slice(0,3)} ${d.getDate()}, ${d.getFullYear()}`;
+  } else {
+    const d1 = new Date(start + "T00:00:00"); const d2 = new Date(end + "T00:00:00");
+    dates_display = `${MONTH_NAMES[d1.getMonth()].slice(0,3)} ${d1.getDate()}–${d2.getDate()}, ${d1.getFullYear()}`;
+  }
+
+  const ev = {
+    id: "custom-" + Date.now() + "-" + Math.random().toString(36).slice(2,7),
+    name, region, location, audience, category, description, cost, url,
+    img: img || null,
+    start: anytime ? null : start,
+    end: anytime ? null : end,
+    dates_display,
+    recurring_weekday: null,
+    anytime,
+    _custom: true
+  };
+  CUSTOM_EVENTS.unshift(ev);
+  saveCustomEvents(CUSTOM_EVENTS);
+  rebuildEvents();
+  closeModals();
+  render();
+}
+
+function deleteCustomEvent(eid) {
+  if (!confirm("Delete this custom event?")) return;
+  CUSTOM_EVENTS = CUSTOM_EVENTS.filter(e => e.id !== eid);
+  // Also clean up done/interest
+  delete state.done[eid]; delete state.myInterest[eid];
+  saveCustomEvents(CUSTOM_EVENTS);
+  saveState();
+  rebuildEvents();
+  render();
+}
+
+document.getElementById("add-event-btn").addEventListener("click", openAddEventModal);
+document.getElementById("add-save").addEventListener("click", saveAddedEvent);
+document.getElementById("add-cancel").addEventListener("click", closeModals);
+document.getElementById("add-anytime").addEventListener("change", (e) => {
+  const off = e.target.checked;
+  document.getElementById("add-start").disabled = off;
+  document.getElementById("add-end").disabled = off;
+});
+
+// Delegated handler for custom event delete buttons in grid
+document.body.addEventListener("click", (e) => {
+  const del = e.target.closest(".del-custom");
+  if (del) {
+    e.stopPropagation();
+    deleteCustomEvent(del.dataset.eid);
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+setView(state.view);
+render();
+</script>
+</body>
+</html>
