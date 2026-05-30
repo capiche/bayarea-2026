@@ -4,7 +4,7 @@ Reads events.json + app.html, injects data, writes index.html.
 
 Usage: python3 build.py
 """
-import json, random
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).parent
@@ -15,37 +15,10 @@ OUTPUT_PATH = ROOT / "index.html"
 with EVENTS_PATH.open() as f:
     events = json.load(f)
 
-# Mock friends shown in the "interested" stack so the social UI is populated
-# out of the box. Real friends would replace these once a backend is wired up.
-random.seed(42)
-friends = [
-    {"id": "alex",   "name": "Alex",   "emoji": "🦊", "color": "#f59e0b"},
-    {"id": "priya",  "name": "Priya",  "emoji": "🌸", "color": "#ec4899"},
-    {"id": "mira",   "name": "Mira",   "emoji": "🌟", "color": "#8b5cf6"},
-    {"id": "raj",    "name": "Raj",    "emoji": "🎨", "color": "#06b6d4"},
-    {"id": "leo",    "name": "Leo",    "emoji": "🐧", "color": "#3b82f6"},
-    {"id": "sara",   "name": "Sara",   "emoji": "🌻", "color": "#f97316"},
-]
-
-def pick_for(audience, n):
-    pool = [e for e in events
-            if audience == "any" or e["audience"] == audience or e["audience"] == "both"]
-    return random.sample(pool, min(n, len(pool)))
-
-profiles = [
-    ("alex",   "adults", 10),
-    ("priya",  "any",     8),
-    ("mira",   "kids",    9),
-    ("raj",    "adults",  8),
-    ("leo",    "kids",    7),
-    ("sara",   "adults",  9),
-]
+# No mock friends. The "interested" stack starts empty — only the real user's
+# own interest shows, until a shared backend is wired up (see CLAUDE.md).
+friends = []
 friend_interests = {}
-for fid, aud, n in profiles:
-    friend_interests.setdefault(fid, [])
-    for e in pick_for(aud, n):
-        if e["id"] not in friend_interests[fid]:
-            friend_interests[fid].append(e["id"])
 
 events_json = json.dumps(events, separators=(",", ":"), ensure_ascii=False)
 friends_json = json.dumps(friends, separators=(",", ":"), ensure_ascii=False)

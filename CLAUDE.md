@@ -71,8 +71,11 @@ You'll need to update three places: (1) the option in `events.json` entries, (2)
 ### Tag more events as concert/comedy
 The tagging was done by a one-off Python script. To re-tag (e.g. after adding new events), the rules live in the conversation history but can also be added here. Simplest path: hand-edit the `show_type` field on new events.
 
-### Change mock friends
-Edit the `friends` and `profiles` arrays in `build.py`. Run build.
+### Friends / "interested" data
+There are no baked-in mock friends. `build.py` injects empty `friends`/`friend_interests`,
+so the "interested" stack starts empty and only shows the real user's own interest
+(stored in their browser's localStorage). To populate a shared stack across people,
+wire up a backend (see "What's not yet built").
 
 ## Deploy stack
 
@@ -82,7 +85,7 @@ Edit the `friends` and `profiles` arrays in `build.py`. Run build.
 
 ## What's not yet built
 
-- **Shared interests across friends.** Currently each browser is its own island; mock friends (Alex, Priya, Mira, Raj, Leo, Sara) are baked in for demo. To make interests sync, wire up Supabase or Vercel Postgres — write code reads/writes to a `interests` table keyed by event_id + user_id, replace the `state.myInterest` / `FRIEND_INTERESTS` localStorage code in `app.html`.
+- **Shared interests across friends.** Currently each browser is its own island; the "interested" stack starts empty (no mock friends). To make interests sync, wire up Supabase or Vercel Postgres — write code reads/writes to a `interests` table keyed by event_id + user_id, replace the `state.myInterest` / `FRIEND_INTERESTS` localStorage code in `app.html`.
 - **Custom events shared across friends.** Same fix — write `customEvents` to the same backend.
 
 ## Conventions
