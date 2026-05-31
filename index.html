@@ -147,6 +147,15 @@ a:hover { text-decoration: underline; }
 }
 .reset-link:hover { text-decoration: underline; }
 
+/* Mobile filter sheet scaffolding — inert on desktop.
+   The sheet container collapses so its filter groups flow inline in .filters. */
+.filter-sheet { display: contents; }
+.filter-sheet-head, .filter-sheet-done, .filter-toggle-btn,
+.filter-sheet-backdrop, .filter-count-pill { display: none; }
+.filter-group-toggles { display: flex; gap: 4px; align-items: center; order: 9; }
+/* Keep search on the right of the filter row on desktop (DOM-first, order-last). */
+.filter-search { order: 8; margin-left: auto; }
+
 /* ============ Grid view ============ */
 .grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px;
@@ -443,42 +452,82 @@ a:hover { text-decoration: underline; }
   .view-toggle { display: flex; width: 100%; }
   .view-toggle button { flex: 1; justify-content: center; padding: 9px 10px; }
 
-  /* --- Filters: each group is a single horizontal-scroll strip --- */
+  /* --- Filters: sticky search + a "Filters" button that opens a bottom sheet --- */
   .filters {
-    flex-direction: column; align-items: stretch; gap: 8px;
-    flex-wrap: nowrap;
+    flex-wrap: nowrap; align-items: center; gap: 8px;
     padding: 8px 0;
-    /* let strips bleed to screen edges so chips can scroll fully */
-    margin-left: -12px; margin-right: -12px; padding-left: 12px; padding-right: 12px;
-  }
-  .filter-group {
-    flex-wrap: nowrap; overflow-x: auto; gap: 6px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    /* allow chips to scroll past the right edge */
-    margin-right: -12px; padding-right: 12px;
-  }
-  .filter-group::-webkit-scrollbar { display: none; }
-  .filter-group > * { flex: 0 0 auto; }
-  .filter-group .label {
-    position: sticky; left: 0; z-index: 1;
-    background: var(--bg);
-    align-self: center;
-    padding: 0 6px 0 0;
-  }
-  /* Bigger, thumb-friendly chips */
-  .chip { font-size: 13px; padding: 8px 13px; }
-
-  /* Search + toggles row: search full width, toggles wrap beneath */
-  .filters .filter-group:last-child {
-    flex-wrap: wrap; overflow: visible; margin-right: 0; padding-right: 0;
   }
   .filter-search {
-    flex: 1 1 100%; max-width: none; min-width: 0;
+    order: 0; margin-left: 0;
+    flex: 1 1 auto; max-width: none; min-width: 0;
     font-size: 16px; /* prevents iOS zoom-on-focus */
     padding: 10px 12px;
   }
-  .reset-link { margin-left: auto; padding: 6px 8px; }
+  .filter-toggle-btn {
+    order: 1; flex: 0 0 auto;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 14px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg-card);
+    color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer;
+  }
+  .filter-toggle-btn.has-active { border-color: var(--accent); color: var(--accent); }
+  .filter-count-pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: 999px; background: var(--accent); color: #fff;
+    font-size: 11px; font-weight: 700; line-height: 1;
+  }
+  .filter-count-pill[hidden] { display: none; }
+
+  /* The sheet itself: hidden until .open, slides up from the bottom */
+  .filter-sheet {
+    display: flex; flex-direction: column; gap: 16px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 110;
+    max-height: 85vh; overflow-y: auto;
+    background: var(--bg-card);
+    border-radius: 18px 18px 0 0;
+    box-shadow: var(--shadow-lg);
+    padding: 8px 18px calc(20px + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+    transition: transform 0.22s ease;
+  }
+  .filter-sheet.open { transform: translateY(0); }
+  .filter-sheet-backdrop {
+    display: block; position: fixed; inset: 0; z-index: 105;
+    background: rgba(20,20,18,0.45); backdrop-filter: blur(3px);
+    opacity: 0; pointer-events: none; transition: opacity 0.22s ease;
+  }
+  .filter-sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+  .filter-sheet-head {
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; background: var(--bg-card);
+    padding: 10px 0 6px; border-bottom: 1px solid var(--border);
+  }
+  /* grab handle */
+  .filter-sheet-head::before {
+    content: ""; position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+    width: 36px; height: 4px; border-radius: 999px; background: var(--border);
+  }
+  .filter-sheet-head h3 { margin: 0; font-size: 16px; font-weight: 600; }
+  .filter-sheet-done {
+    display: inline-block;
+    background: var(--text); color: #fff; border: none;
+    padding: 8px 16px; border-radius: 8px;
+    font-size: 14px; font-weight: 500; cursor: pointer;
+  }
+
+  /* Inside the sheet: label on its own line, chips wrap into a flowing row */
+  .filter-group {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  }
+  .filter-group .label { width: 100%; padding: 0; font-size: 12px; }
+  .chip { font-size: 13.5px; padding: 9px 14px; }
+  .filter-group-toggles {
+    order: 0; margin-left: 0; flex-direction: row; flex-wrap: wrap;
+    gap: 8px; width: 100%;
+    padding-top: 14px; border-top: 1px solid var(--border);
+  }
+  .filter-group-toggles .reset-link { margin-left: auto; padding: 9px 10px; font-size: 14px; }
 
   .count-badge { padding: 4px 0 0; }
 
@@ -552,40 +601,54 @@ a:hover { text-decoration: underline; }
   </div>
 
   <div class="filters">
-    <div class="filter-group">
-      <span class="label">Who</span>
-      <button class="chip active" data-filter="audience" data-value="all">All</button>
-      <button class="chip" data-filter="audience" data-value="kids">Kids 4-7</button>
-      <button class="chip" data-filter="audience" data-value="adults">Adults</button>
-    </div>
-    <div class="filter-group">
-      <span class="label">Type</span>
-      <button class="chip active" data-filter="category" data-value="all">All</button>
-      <button class="chip" data-filter="category" data-value="festive">Festive</button>
-      <button class="chip" data-filter="category" data-value="outdoor">Outdoor</button>
-      <button class="chip" data-filter="category" data-value="arts">Arts</button>
-      <button class="chip" data-filter="category" data-value="kid">Kid</button>
-      <button class="chip" data-filter="category" data-value="novel">Novel</button>
-      <button class="chip" data-filter="category" data-value="food">Food</button>
-      <button class="chip" data-filter="category" data-value="getaway">Getaway</button>
-    </div>
-    <div class="filter-group">
-      <span class="label">When</span>
-      <button class="chip active" data-filter="timing" data-value="all">All</button>
-      <button class="chip" data-filter="timing" data-value="dated">📅 Dated</button>
-      <button class="chip" data-filter="timing" data-value="anytime">∞ Anytime</button>
-    </div>
-    <div class="filter-group">
-      <span class="label">Show</span>
-      <button class="chip active" data-filter="showtype" data-value="all">All</button>
-      <button class="chip" data-filter="showtype" data-value="concert">🎤 Concerts</button>
-      <button class="chip" data-filter="showtype" data-value="comedy">😂 Comedy</button>
-    </div>
-    <div class="filter-group" style="margin-left:auto">
-      <input class="filter-search" id="search" type="text" placeholder="Search events…">
-      <button class="chip" id="hide-done-chip" data-filter="hidedone">Hide done</button>
-      <button class="chip" id="my-interest-chip" data-filter="myinterest">My interests</button>
-      <button class="reset-link" id="reset">Reset</button>
+    <input class="filter-search" id="search" type="text" placeholder="Search events…">
+    <button class="filter-toggle-btn" id="filter-toggle" type="button" aria-expanded="false">
+      <span aria-hidden="true">☰</span> Filters
+      <span class="filter-count-pill" id="filter-count-pill" hidden></span>
+    </button>
+
+    <div class="filter-sheet-backdrop" id="filter-sheet-backdrop"></div>
+
+    <div class="filter-sheet" id="filter-sheet">
+      <div class="filter-sheet-head">
+        <h3>Filters</h3>
+        <button class="filter-sheet-done" id="filter-sheet-done" type="button">Done</button>
+      </div>
+
+      <div class="filter-group">
+        <span class="label">Who</span>
+        <button class="chip active" data-filter="audience" data-value="all">All</button>
+        <button class="chip" data-filter="audience" data-value="kids">Kids 4-7</button>
+        <button class="chip" data-filter="audience" data-value="adults">Adults</button>
+      </div>
+      <div class="filter-group">
+        <span class="label">Type</span>
+        <button class="chip active" data-filter="category" data-value="all">All</button>
+        <button class="chip" data-filter="category" data-value="festive">Festive</button>
+        <button class="chip" data-filter="category" data-value="outdoor">Outdoor</button>
+        <button class="chip" data-filter="category" data-value="arts">Arts</button>
+        <button class="chip" data-filter="category" data-value="kid">Kid</button>
+        <button class="chip" data-filter="category" data-value="novel">Novel</button>
+        <button class="chip" data-filter="category" data-value="food">Food</button>
+        <button class="chip" data-filter="category" data-value="getaway">Getaway</button>
+      </div>
+      <div class="filter-group">
+        <span class="label">When</span>
+        <button class="chip active" data-filter="timing" data-value="all">All</button>
+        <button class="chip" data-filter="timing" data-value="dated">📅 Dated</button>
+        <button class="chip" data-filter="timing" data-value="anytime">∞ Anytime</button>
+      </div>
+      <div class="filter-group">
+        <span class="label">Show</span>
+        <button class="chip active" data-filter="showtype" data-value="all">All</button>
+        <button class="chip" data-filter="showtype" data-value="concert">🎤 Concerts</button>
+        <button class="chip" data-filter="showtype" data-value="comedy">😂 Comedy</button>
+      </div>
+      <div class="filter-group filter-group-toggles">
+        <button class="chip" id="hide-done-chip" data-filter="hidedone">Hide done</button>
+        <button class="chip" id="my-interest-chip" data-filter="myinterest">My interests</button>
+        <button class="reset-link" id="reset">Reset</button>
+      </div>
     </div>
   </div>
 
@@ -1333,6 +1396,7 @@ function setView(v) {
 // ============================================================
 function render() {
   updateProfileChip();
+  updateFilterCount();
   const matching = EVENTS.filter(matches);
   document.getElementById("count-badge").textContent =
     `${matching.length} of ${EVENTS.length} events`;
@@ -1342,6 +1406,23 @@ function render() {
   } else {
     renderCalendar(matching);
   }
+}
+
+// Count of non-default filters, surfaced on the mobile "Filters" button.
+function updateFilterCount() {
+  let n = 0;
+  if (filters.audience !== "all") n++;
+  if (filters.category !== "all") n++;
+  if (filters.timing !== "all") n++;
+  if (filters.showtype !== "all") n++;
+  if (filters.hideDone) n++;
+  if (filters.myInterest) n++;
+  const btn = document.getElementById("filter-toggle");
+  const pill = document.getElementById("filter-count-pill");
+  if (!btn || !pill) return;
+  btn.classList.toggle("has-active", n > 0);
+  if (n > 0) { pill.textContent = n; pill.hidden = false; }
+  else { pill.hidden = true; }
 }
 
 function updateProfileChip() {
@@ -1374,6 +1455,27 @@ window.resetFilters = resetFilters;
 // ============================================================
 // EVENTS / BINDINGS
 // ============================================================
+
+// Mobile filter sheet open/close
+const filterSheet = document.getElementById("filter-sheet");
+const filterSheetBackdrop = document.getElementById("filter-sheet-backdrop");
+const filterToggleBtn = document.getElementById("filter-toggle");
+function openFilterSheet() {
+  filterSheet.classList.add("open");
+  filterSheetBackdrop.classList.add("open");
+  filterToggleBtn.setAttribute("aria-expanded", "true");
+}
+function closeFilterSheet() {
+  filterSheet.classList.remove("open");
+  filterSheetBackdrop.classList.remove("open");
+  filterToggleBtn.setAttribute("aria-expanded", "false");
+}
+filterToggleBtn.addEventListener("click", () => {
+  filterSheet.classList.contains("open") ? closeFilterSheet() : openFilterSheet();
+});
+filterSheetBackdrop.addEventListener("click", closeFilterSheet);
+document.getElementById("filter-sheet-done").addEventListener("click", closeFilterSheet);
+
 document.querySelectorAll(".chip[data-filter=region], .chip[data-filter=audience], .chip[data-filter=category], .chip[data-filter=timing], .chip[data-filter=showtype]").forEach(chip => {
   chip.addEventListener("click", () => {
     const f = chip.dataset.filter;
@@ -1429,7 +1531,7 @@ document.getElementById("cal-next").addEventListener("click", () => {
 });
 
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeModals();
+  if (e.key === "Escape") { closeModals(); closeFilterSheet(); }
 });
 
 // ============================================================
