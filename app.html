@@ -488,9 +488,12 @@ a:hover { text-decoration: underline; }
   .btn-action { padding: 7px 11px; font-size: 12.5px; }
   .interest-stack { margin-left: auto; }
 
-  /* --- Calendar --- */
-  .cal-cell { min-height: 78px; padding: 4px; }
-  .cal-event { font-size: 9.5px; padding: 1px 4px; }
+  /* --- Calendar ---
+     min-width:0 is the critical fix: without it the repeat(7,1fr) cells keep
+     their content min-width, overflow, and get clipped by
+     .cal-grid{overflow:hidden} — hiding Tue–Sat entirely on phones. */
+  .cal-cell { min-width: 0; min-height: 78px; padding: 4px; }
+  .cal-event { min-width: 0; font-size: 9.5px; padding: 1px 4px; }
   .cal-grid .dow { padding: 6px 2px; font-size: 10px; }
   .cal-header { flex-wrap: wrap; gap: 8px; }
   .cal-header h2 { font-size: 16px; flex: 1; }
@@ -510,11 +513,29 @@ a:hover { text-decoration: underline; }
   .detail-body .action-row .btn-primary { margin-left: 0; flex: 1 1 100%; justify-content: center; }
 }
 
+/* Narrow phones: event pills are illegible at ~50px wide, so collapse them to
+   compact colour bars. Tapping a day still opens the full event list. */
+@media (max-width: 480px) {
+  .cal-cell { min-height: 66px; }
+  .cal-event {
+    height: 5px; padding: 0; font-size: 0; line-height: 0;
+    border-left-width: 0; border-radius: 2px;
+  }
+  /* Use the saturated category colour so each bar reads at a glance */
+  .cal-event.cat-festive { background: var(--cat-festive); }
+  .cal-event.cat-outdoor { background: var(--cat-outdoor); }
+  .cal-event.cat-arts    { background: var(--cat-arts); }
+  .cal-event.cat-kid     { background: var(--cat-kid); }
+  .cal-event.cat-novel   { background: var(--cat-novel); }
+  .cal-event.cat-food    { background: var(--cat-food); }
+  .cal-event.cat-getaway { background: var(--cat-getaway); }
+  .cal-more { font-size: 9px; padding: 0 4px; }
+}
+
 /* Very small phones */
 @media (max-width: 380px) {
   .brand h1 { font-size: 17px; }
   .view-toggle button { padding: 9px 6px; font-size: 12.5px; }
-  .cal-event { font-size: 9px; }
 }
 </style>
 </head>
